@@ -3,7 +3,7 @@ on:
   schedule:
     # 6am Costa Rica time (UTC-6, no daylight saving time)
     - cron: "0 12 * * 1,3,5"   # Mon, Wed, Fri: master
-    - cron: "53 21 * * 2,4"     # Tue, Thu: release_v26.06
+    - cron: "0 22 * * 2,4"     # Tue, Thu: release_v26.06
   workflow_dispatch:
     inputs:
       branch:
@@ -13,7 +13,7 @@ on:
         default: main
         options:
           - main
-          - release_v26.06
+          - release
 
 permissions:
   contents: read
@@ -25,8 +25,8 @@ env:
   # "on: schedule:" and do not end the last entry with a comma.
   BRANCH_BY_CRON: |
     {
-      "0 12 * * 1,3,5": "release_v26.06",
-      "53 21 * * 2,4": "main"
+      "0 12 * * 1,3,5": "release",
+      "0 22 * * 2,4": "main"
     }
 
 jobs:
@@ -39,3 +39,11 @@ jobs:
           echo "Triggered by: ${{ github.event_name }}"
           echo "Schedule: ${{ github.event.schedule }}"
           echo "Branch to test: ${{ inputs.branch || fromJSON(env.BRANCH_BY_CRON)[github.event.schedule] || 'main' }}"
+  
+  checkout:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.branch || fromJSON(env.BRANCH_BY_CRON)[github.event.schedule] || 'main' }}
