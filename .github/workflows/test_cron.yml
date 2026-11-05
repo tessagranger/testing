@@ -46,7 +46,8 @@ jobs:
     needs: resolve
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Branch to test: ${{ needs.resolve.outputs.branch }}"
+      - run: |
+          echo "Branch to test: ${{ needs.resolve.outputs.branch }}"
 
   checkout:
     needs: resolve
