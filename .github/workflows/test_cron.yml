@@ -1,4 +1,4 @@
-name: CronTests
+name: CronTests Release
 on:
   schedule:
     # 6am Costa Rica time (UTC-6, no daylight saving time)
